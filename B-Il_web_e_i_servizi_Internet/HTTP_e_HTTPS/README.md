@@ -27,6 +27,19 @@
 12. [HTTP/2](03_http_moderno/12_http2.md)
 13. [HTTP/3 e QUIC](03_http_moderno/13_http3_e_quic.md)
 14. [Confronto Versioni HTTP](03_http_moderno/14_confronto_versioni_http.md)
+. WebSockets
+. Web Push Notifications
+. Progressive Web Apps (PWA)
+. GraphQL e HTTP
+. gRPC e HTTP/2
+. Microservizi e HTTP
+. Server-Sent Events (SSE)
+. Single Page Applications (SPA)
+. Server-Side Rendering (SSR)
+. Static Site Generation (SSG)
+. Jamstack
+. Headless CMS
+. Backend for Frontend (BFF)
 
 ## **04. REST e Web APIs**
 . Principi REST
@@ -37,37 +50,17 @@
 . Performance HTTP
 . Caching Strategies
 . Load Balancing e Scalabilità
+. Proxy e Gateway
 
 ## **06. Testing e Debugging**
 . Tools per Testing HTTP
 . Debugging HTTP
 . Testing Automatizzato
 
-## Parte X - Applicazioni Avanzate
-
-. WebSockets
-. Server-Sent Events (SSE)
-. Web Push Notifications
-. Progressive Web Apps (PWA)
-. GraphQL e HTTP
-. gRPC e HTTP/2
-. Microservizi e HTTP
-
 ## Parte XI - Standard e Specifiche
-
 . RFC e Standard HTTP
 . IANA Registries
 . W3C e WHATWG Standards
-
-## Parte XII - Casi di Studio e Applicazioni Pratiche
-
-### 44. Architetture Web Moderne
-- 44.1 Single Page Applications (SPA)
-- 44.2 Server-Side Rendering (SSR)
-- 44.3 Static Site Generation (SSG)
-- 44.4 Jamstack
-- 44.5 Headless CMS
-- 44.6 Backend for Frontend (BFF)
 
 ### 45. Cloud e Serverless
 - 45.1 HTTP in cloud environments
@@ -159,63 +152,3 @@
 - F.4 Progetti pratici completi
 
 ---
-
-Ecco un indice strutturato per un libro sul protocollo HTTP, ideale per sviluppatori, sistemisti o appassionati di tecnologie web.
-
----
-
-**Indice del Libro: “HTTP - Il Protocollo del Web”**
-
-**Parte I: Fondamenti di HTTP**
-1. **Introduzione al World Wide Web**
- 
- 
-6. **Gestione della Cache**
-   - 6.1 Cache browser e cache intermedi (CDN, proxy)
-   - 6.2 Header per la cache: Expires, Cache-Control, ETag
-   - 6.3 Validazione: Last-Modified e ETag
-   - 6.4 Strategie di caching per prestazioni ottimali
-
-7. **Cookie e Sessioni**
-   - 7.1 Cosa sono i cookie e come funzionano
-   - 7.2 Header Set-Cookie e Cookie
-   - 7.3 Cookie per autenticazione e tracciamento
-   - 7.4 Best practice per la sicurezza (HttpOnly, Secure, SameSite)
-
-8. **Autenticazione e Sicurezza di Base**
-   - 8.1 Autenticazione HTTP Basic e Digest
-   - 8.2 Token Bearer e OAuth 2.0
-   - 8.3 Introduzione a HTTPS e TLS
-
-**Parte III: HTTP Moderno e Prestazioni**
-
-
-10. **Ottimizzazione delle Prestazioni**
-    - 10.1 Ridurre la latenza: concatenamento e sharding
-    - 10.2 Compressione (gzip, Brotli)
-    - 10.3 Precaricamento (Preload, Prefetch)
-    - 10.4 Metriche di performance (TTFB, LCP)
-
-**Parte IV: Tecniche Avanzate e Best Practice**
-11. **API REST e RESTful Design**
-    - 11.1 Principi REST e risorse HTTP
-    - 11.2 Design di API intuitive e consistenti
-    - 11.3 Versioning delle API
-    - 11.4 HATEOAS e ipermedia
-
-12. **Sicurezza Avanzata**
-    - 12.1 Attacchi comuni (XSS, CSRF)
-    - 12.2 Header di sicurezza (CSP, HSTS, X-Content-Type-Options)
-    - 12.3 Validazione input e output encoding
-
-13. **HTTP in Ambienti Complessi**
-    - 13.1 Proxy, Load Balancer e Gateway
-    - 13.2 HTTP e microservizi
-    - 13.3 Gestione di CORS (Cross-Origin Resource Sharing)
-
-**Parte V: Appendici**
-- A. **RFC di Riferimento e Risorse**
-- B. **Glossario dei Termini**
-- C. **Esempi di Codice (curl, JavaScript, Python)**
-- D. **Checklist per Sviluppatori**
-
