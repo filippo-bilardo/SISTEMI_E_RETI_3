@@ -897,3 +897,7 @@ Nei prossimi capitoli approfondiremo la struttura dettagliata di richieste e ris
 
 **Data ultimo aggiornamento**: Ottobre 2025  
 **Versione guida**: 1.0
+
+--- 
+[Torna all'indice](README.md)
+[Capitolo successivo: Anatomia di una Richiesta HTTP](03_anatomia_richiesta_http.md)

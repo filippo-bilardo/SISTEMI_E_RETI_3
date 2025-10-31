@@ -738,3 +738,7 @@ Nei prossimi capitoli approfondiremo:
 
 **Data ultimo aggiornamento**: Ottobre 2025  
 **Versione guida**: 1.0
+
+--- 
+[Torna all'indice](README.md)
+[Capitolo successivo: Architettura e Modello di Comunicazione](02_architettura_e_modello_di_comunicazione.md)

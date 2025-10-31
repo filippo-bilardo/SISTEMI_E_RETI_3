@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat Client</title>
+    <style>
+        /* 
+         * STILI CSS PER L'INTERFACCIA CHAT
+         * Design moderno e responsive
+         */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        /* Container principale della chat */
+        .chat-container {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            width: 100%;
+            max-width: 600px;
+            height: 700px;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        
+        /* Header con titolo */
+        .chat-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+        
+        .chat-header h1 {
+            font-size: 24px;
+            margin-bottom: 5px;
+        }
+        
+        /* Indicatore stato connessione */
+        .status {
+            display: inline-block;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 12px;
+            background: rgba(255, 255, 255, 0.2);
+            margin-top: 5px;
+        }
+        
+        .status.connected {
+            background: #4caf50;
+        }
+        
+        .status.disconnected {
+            background: #f44336;
+        }
+        
+        /* Area messaggi */
+        .messages {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            background: #f5f5f5;
+        }
+        
+        /* Singolo messaggio */
+        .message {
+            margin-bottom: 15px;
+            animation: slideIn 0.3s ease;
+        }
+        
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        /* Messaggio del server (sistema) */
+        .message.server {
+            text-align: center;
+            color: #666;
+            font-style: italic;
+            font-size: 14px;
+        }
+        
+        /* Messaggio di un utente */
+        .message.user {
+            background: white;
+            padding: 12px 15px;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        
+        .message.user .username {
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 5px;
+            display: block;
+        }
+        
+        .message.user .text {
+            color: #333;
+            word-wrap: break-word;
+        }
+        
+        /* Form di invio messaggio */
+        .chat-form {
+            padding: 20px;
+            background: white;
+            border-top: 1px solid #e0e0e0;
+            display: flex;
+            gap: 10px;
+        }
+        
+        .chat-form input {
+            flex: 1;
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 25px;
+            font-size: 14px;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+        
+        .chat-form input:focus {
+            border-color: #667eea;
+        }
+        
+        .chat-form button {
+            padding: 12px 30px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        
+        .chat-form button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+        
+        .chat-form button:active {
+            transform: translateY(0);
+        }
+        
+        .chat-form button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        /* Modal per il login */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        
+        .modal-content {
+            background: white;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+            text-align: center;
+            max-width: 400px;
+            width: 90%;
+        }
+        
+        .modal-content h2 {
+            color: #667eea;
+            margin-bottom: 20px;
+        }
+        
+        .modal-content input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 16px;
+            margin-bottom: 20px;
+            outline: none;
+        }
+        
+        .modal-content input:focus {
+            border-color: #667eea;
+        }
+        
+        .modal-content button {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        
+        .modal-content button:hover {
+            transform: translateY(-2px);
+        }
+        
+        /* Scrollbar personalizzata */
+        .messages::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        .messages::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+        
+        .messages::-webkit-scrollbar-thumb {
+            background: #667eea;
+            border-radius: 4px;
+        }
+        
+        .messages::-webkit-scrollbar-thumb:hover {
+            background: #764ba2;
+        }
+    </style>
+</head>
+<body>
+    <!-- Modal per inserire il nome utente -->
+    <div id="loginModal" class="modal">
+        <div class="modal-content">
+            <h2>👋 Benvenuto nella Chat</h2>
+            <input type="text" id="usernameInput" placeholder="Inserisci il tuo nome..." maxlength="20">
+            <button onclick="connect()">Entra nella Chat</button>
+        </div>
+    </div>
+    
+    <!-- Container principale della chat -->
+    <div class="chat-container">
+        <!-- Header con titolo e stato connessione -->
+        <div class="chat-header">
+            <h1>💬 Chat Room</h1>
+            <span id="status" class="status disconnected">Non connesso</span>
+        </div>
+        
+        <!-- Area messaggi -->
+        <div id="messages" class="messages"></div>
+        
+        <!-- Form per inviare messaggi -->
+        <form id="chatForm" class="chat-form">
+            <input 
+                type="text" 
+                id="messageInput" 
+                placeholder="Scrivi un messaggio..." 
+                disabled
+                autocomplete="off"
+            >
+            <button type="submit" disabled>Invia</button>
+        </form>
+    </div>
+
+    <script>
+        /**
+         * CHAT CLIENT - JavaScript
+         * 
+         * FUNZIONAMENTO:
+         * 1. L'utente inserisce il nome utente
+         * 2. Si connette al server WebSocket
+         * 3. Può inviare e ricevere messaggi in tempo reale
+         * 4. Gestisce connessione/disconnessione automaticamente
+         * 
+         * PROTOCOLLO WEBSOCKET:
+         * - ws:// per connessioni non sicure (sviluppo)
+         * - wss:// per connessioni sicure (produzione con HTTPS)
+         */
+        
+        // Riferimenti agli elementi DOM
+        const loginModal = document.getElementById('loginModal');
+        const usernameInput = document.getElementById('usernameInput');
+        const messagesDiv = document.getElementById('messages');
+        const messageInput = document.getElementById('messageInput');
+        const chatForm = document.getElementById('chatForm');
+        const statusSpan = document.getElementById('status');
+        const sendButton = chatForm.querySelector('button');
+        
+        // Variabili globali
+        let socket = null;          // WebSocket connection
+        let username = '';          // Nome utente corrente
+        let isConnected = false;    // Stato connessione
+        
+        /**
+         * NOTA IMPORTANTE:
+         * Il server Java usa Socket TCP puro, NON WebSocket!
+         * 
+         * Per connettere il browser al server Java, hai 2 opzioni:
+         * 
+         * OPZIONE 1: Usare un WebSocket Proxy
+         * - Installare websockify: pip install websockify
+         * - Avviare il proxy: websockify localhost:8081 localhost:8080
+         * - Il browser si connette a ws://localhost:8081
+         * - Il proxy inoltra al server Java su localhost:8080
+         * 
+         * OPZIONE 2: Modificare il server Java per supportare WebSocket
+         * - Usare libreria Java-WebSocket
+         * - Implementare protocollo WebSocket lato server
+         * 
+         * Per questa demo, assumiamo l'uso di websockify.
+         */
+        
+        // Configurazione connessione
+        const WEBSOCKET_URL = 'ws://localhost:8081';  // Proxy WebSocket
+        // Se hai un server WebSocket Java nativo, usa: ws://localhost:8080
+        
+        /**
+         * Connette al server WebSocket
+         * Chiamata quando l'utente clicca "Entra nella Chat"
+         */
+        function connect() {
+            // Valida il nome utente
+            username = usernameInput.value.trim();
+            
+            if (!username) {
+                alert('Inserisci un nome utente!');
+                return;
+            }
+            
+            if (username.length < 2) {
+                alert('Il nome deve avere almeno 2 caratteri!');
+                return;
+            }
+            
+            console.log('[CONNECT] Connessione a:', WEBSOCKET_URL);
+            
+            try {
+                // Crea una nuova connessione WebSocket
+                socket = new WebSocket(WEBSOCKET_URL);
+                
+                /**
+                 * Event: onopen
+                 * Chiamato quando la connessione è stabilita
+                 */
+                socket.onopen = function(event) {
+                    console.log('[CONNECTED] Connessione stabilita');
+                    isConnected = true;
+                    
+                    // Nasconde il modal di login
+                    loginModal.style.display = 'none';
+                    
+                    // Aggiorna lo stato UI
+                    updateConnectionStatus(true);
+                    
+                    // Invia il nome utente come primo messaggio
+                    // Il server Java si aspetta il nome come prima riga
+                    socket.send(username);
+                    
+                    // Abilita l'input dei messaggi
+                    messageInput.disabled = false;
+                    sendButton.disabled = false;
+                    messageInput.focus();
+                    
+                    // Mostra messaggio di benvenuto
+                    addSystemMessage('Connesso al server! 🎉');
+                };
+                
+                /**
+                 * Event: onmessage
+                 * Chiamato quando arriva un messaggio dal server
+                 */
+                socket.onmessage = function(event) {
+                    const message = event.data;
+                    console.log('[MESSAGE] Ricevuto:', message);
+                    
+                    // Determina il tipo di messaggio
+                    if (message.startsWith('SERVER:')) {
+                        // Messaggio di sistema
+                        addSystemMessage(message.substring(7).trim());
+                    } else {
+                        // Messaggio di un utente
+                        addUserMessage(message);
+                    }
+                };
+                
+                /**
+                 * Event: onerror
+                 * Chiamato in caso di errore
+                 */
+                socket.onerror = function(error) {
+                    console.error('[ERROR] Errore WebSocket:', error);
+                    addSystemMessage('❌ Errore di connessione!');
+                };
+                
+                /**
+                 * Event: onclose
+                 * Chiamato quando la connessione si chiude
+                 */
+                socket.onclose = function(event) {
+                    console.log('[DISCONNECTED] Connessione chiusa');
+                    isConnected = false;
+                    
+                    // Aggiorna lo stato UI
+                    updateConnectionStatus(false);
+                    
+                    // Disabilita l'input
+                    messageInput.disabled = true;
+                    sendButton.disabled = true;
+                    
+                    // Mostra messaggio
+                    addSystemMessage('Disconnesso dal server');
+                    
+                    // Mostra di nuovo il modal di login
+                    loginModal.style.display = 'flex';
+                };
+                
+            } catch (error) {
+                console.error('[ERROR] Errore durante la connessione:', error);
+                alert('Errore: impossibile connettersi al server.\n\nAssicurati che:\n1. Il server Java sia in esecuzione\n2. Websockify sia attivo: websockify localhost:8081 localhost:8080');
+            }
+        }
+        
+        /**
+         * Aggiorna lo stato della connessione nell'UI
+         * @param {boolean} connected - True se connesso
+         */
+        function updateConnectionStatus(connected) {
+            if (connected) {
+                statusSpan.textContent = 'Connesso';
+                statusSpan.className = 'status connected';
+            } else {
+                statusSpan.textContent = 'Non connesso';
+                statusSpan.className = 'status disconnected';
+            }
+        }
+        
+        /**
+         * Aggiunge un messaggio di sistema (notifiche server)
+         * @param {string} text - Testo del messaggio
+         */
+        function addSystemMessage(text) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'message server';
+            messageDiv.textContent = text;
+            
+            messagesDiv.appendChild(messageDiv);
+            scrollToBottom();
+        }
+        
+        /**
+         * Aggiunge un messaggio di un utente
+         * @param {string} message - Messaggio nel formato "username: testo"
+         */
+        function addUserMessage(message) {
+            // Separa username dal testo
+            const colonIndex = message.indexOf(':');
+            if (colonIndex === -1) {
+                // Formato non valido, mostra come sistema
+                addSystemMessage(message);
+                return;
+            }
+            
+            const user = message.substring(0, colonIndex).trim();
+            const text = message.substring(colonIndex + 1).trim();
+            
+            // Crea elemento messaggio
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'message user';
+            
+            const usernameSpan = document.createElement('span');
+            usernameSpan.className = 'username';
+            usernameSpan.textContent = user;
+            
+            const textSpan = document.createElement('span');
+            textSpan.className = 'text';
+            textSpan.textContent = text;
+            
+            messageDiv.appendChild(usernameSpan);
+            messageDiv.appendChild(textSpan);
+            
+            messagesDiv.appendChild(messageDiv);
+            scrollToBottom();
+        }
+        
+        /**
+         * Scrolla automaticamente verso il basso
+         * per mostrare l'ultimo messaggio
+         */
+        function scrollToBottom() {
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+        }
+        
+        /**
+         * Invia un messaggio al server
+         * @param {Event} event - Event del form submit
+         */
+        function sendMessage(event) {
+            event.preventDefault();  // Previene il reload della pagina
+            
+            const message = messageInput.value.trim();
+            
+            // Valida il messaggio
+            if (!message) {
+                return;
+            }
+            
+            if (!isConnected) {
+                alert('Non sei connesso al server!');
+                return;
+            }
+            
+            console.log('[SEND] Invio messaggio:', message);
+            
+            // Invia il messaggio tramite WebSocket
+            socket.send(message);
+            
+            // Pulisce l'input
+            messageInput.value = '';
+            messageInput.focus();
+        }
+        
+        /**
+         * Gestisce la pressione del tasto Enter nell'input username
+         */
+        usernameInput.addEventListener('keypress', function(event) {
+            if (event.key === 'Enter') {
+                event.preventDefault();
+                connect();
+            }
+        });
+        
+        /**
+         * Gestisce l'invio del form messaggi
+         */
+        chatForm.addEventListener('submit', sendMessage);
+        
+        /**
+         * Gestisce la chiusura della finestra/tab
+         * Chiude correttamente la connessione WebSocket
+         */
+        window.addEventListener('beforeunload', function() {
+            if (socket && isConnected) {
+                socket.close();
+            }
+        });
+        
+        /**
+         * Autofocus sull'input username quando la pagina carica
+         */
+        window.addEventListener('load', function() {
+            usernameInput.focus();
+        });
+        
+        // Log informativo
+        console.log('=== Chat Client Inizializzato ===');
+        console.log('Server URL:', WEBSOCKET_URL);
+        console.log('');
+        console.log('IMPORTANTE: Per connettere il browser al server Java Socket,');
+        console.log('devi usare websockify come proxy WebSocket:');
+        console.log('');
+        console.log('1. Installa: pip install websockify');
+        console.log('2. Avvia: websockify localhost:8081 localhost:8080');
+        console.log('3. Apri questa pagina nel browser');
+        console.log('');
+    </script>
+</body>
+</html>

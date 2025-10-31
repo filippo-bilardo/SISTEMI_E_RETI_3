@@ -1054,3 +1054,7 @@ Nel prossimo capitolo vedremo la struttura delle **risposte HTTP**.
 
 **Data ultimo aggiornamento**: Ottobre 2025  
 **Versione guida**: 1.0
+
+
+--- 
+[Torna all'indice](README.md)

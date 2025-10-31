@@ -1162,3 +1162,6 @@ Nel prossimo capitolo approfondiremo i **metodi HTTP** in dettaglio.
 
 **Data ultimo aggiornamento**: Ottobre 2025  
 **Versione guida**: 1.0
+
+--- 
+[Torna all'indice](README.md)
