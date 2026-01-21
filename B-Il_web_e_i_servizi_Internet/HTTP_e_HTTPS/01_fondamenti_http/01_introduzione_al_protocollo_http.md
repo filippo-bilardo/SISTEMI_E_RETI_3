@@ -555,7 +555,7 @@ HTTP è diventato molto più del semplice protocollo per trasferire pagine HTML:
 ┌─────────────────────────────────────────────┐
 │         Applicazioni Web Moderne            │
 ├─────────────────────────────────────────────┤
-│  REST APIs  │  GraphQL  │  gRPC (HTTP/2)   │
+│  REST APIs  │  GraphQL  │  gRPC (HTTP/2)    │
 ├─────────────────────────────────────────────┤
 │         HTTP/1.1, HTTP/2, HTTP/3            │
 ├─────────────────────────────────────────────┤
@@ -563,7 +563,7 @@ HTTP è diventato molto più del semplice protocollo per trasferire pagine HTML:
 ├─────────────────────────────────────────────┤
 │         TCP (HTTP/1-2) o UDP (HTTP/3)       │
 ├─────────────────────────────────────────────┤
-│                     IP                       │
+│                     IP                      │
 └─────────────────────────────────────────────┘
 ```
 
@@ -616,11 +616,11 @@ Client                    Internet                    Server
 Client                    Internet                    Server
   |                          |                          |
   | 1. TLS Handshake         |                          |
-  |<========================================SECURE======>|
+  |<=======================================SECURE======>|
   |                          |                          |
   | 2. GET /data (CIFRATO)   |                          |
   |------------------------->|------------------------->|
-  |    ??????????????????? (Non leggibile)               |
+  |    ??????????????????? (Non leggibile)              |
   |                          |                          |
   | 3. Response (CIFRATO)    |                          |
   |<-------------------------|<-------------------------|

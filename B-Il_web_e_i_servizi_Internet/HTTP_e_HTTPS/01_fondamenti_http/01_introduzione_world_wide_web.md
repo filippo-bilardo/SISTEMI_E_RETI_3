@@ -15,16 +15,16 @@ HTTP è un **protocollo a livello applicativo** che:
 ### Caratteristiche Principali
 
 ```
-┌─────────────────────────────────────────────┐
-│           CARATTERISTICHE HTTP              │
-├─────────────────────────────────────────────┤
+┌────────────────────────────────────────────┐
+│           CARATTERISTICHE HTTP             │
+├────────────────────────────────────────────┤
 │ ✓ Protocollo testuale                      │
 │ ✓ Stateless (ogni richiesta è indipendente)│
 │ ✓ Estensibile (header personalizzabili)    │
 │ ✓ Client-Server architecture               │
 │ ✓ Supporto caching                         │
 │ ✓ Negoziazione contenuti                   │
-└─────────────────────────────────────────────┘
+└────────────────────────────────────────────┘
 ```
 s
 ### Esempio di Comunicazione HTTP
@@ -129,22 +129,22 @@ A page with an image
 **Problema principale:** Ogni richiesta apriva una nuova connessione TCP!
 
 ```
-┌─────────┐                              ┌─────────┐
-│ Browser │                              │ Server  │
-└────┬────┘                              └────┬────┘
-     │                                        │
-     │ ─── TCP handshake (3-way) ────────► │
-     │ ◄── GET /page.html ─────────────── │
-     │ ─── 200 OK + HTML ─────────────────► │
-     │ ◄── TCP close ─────────────────────┘ │
-     │                                        │
-     │ ─── TCP handshake (per CSS) ───────► │
-     │ ◄── GET /style.css ────────────────  │
-     │ ─── 200 OK + CSS ──────────────────► │
-     │ ◄── TCP close ─────────────────────┘ │
-     │                                        │
-     │ ─── TCP handshake (per immagine) ──► │
-     │ ... (continua per ogni risorsa)       │
+┌─────────┐                           ┌─────────┐
+│ Browser │                           │ Server  │
+└────┬────┘                           └────┬────┘
+     │                                     │
+     │ ─── TCP handshake (3-way) ─────────►│
+     │ ◄── GET /page.html ───────────────  │
+     │ ─── 200 OK + HTML ─────────────────►│
+     │ ◄── TCP close ─────────────────────┘│
+     │                                     │
+     │ ─── TCP handshake (per CSS) ───────►│
+     │ ◄── GET /style.css ──────────────── │
+     │ ─── 200 OK + CSS ──────────────────►│
+     │ ◄── TCP close ─────────────────────┘│
+     │                                     │
+     │ ─── TCP handshake (per immagine) ──►│
+     │ ... (continua per ogni risorsa)     │
 ```
 
 ---
