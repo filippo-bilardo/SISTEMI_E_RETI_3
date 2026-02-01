@@ -1,0 +1,292 @@
+! ============================================
+! Switch Configuration - LAN Struttura Sanitaria Privata
+! Esempio: Clinica San Marco
+! ============================================
+! Riferimento: SOLUZIONE_COMPLETA.md - Punto 3
+!
+! Questo switch gestisce la segmentazione VLAN tra:
+! - VLAN 10: FSE (Accesso al Fascicolo Sanitario Elettronico)
+! - VLAN 20: Admin (Rete amministrativa interna)
+! - VLAN 30: Guest (WiFi ospiti)
+! ============================================
+
+! Hostname
+hostname SW-SanMarco-01
+!
+! VLAN Database
+vlan 10
+ name FSE-Network
+!
+vlan 20
+ name Admin-Network
+!
+vlan 30
+ name Guest-Network
+!
+vlan 99
+ name Management
+!
+
+! ============================================
+! Management Interface
+! ============================================
+
+interface Vlan99
+ description Management-VLAN
+ ip address 192.168.99.2 255.255.255.0
+ no shutdown
+!
+ip default-gateway 192.168.99.1
+!
+
+! ============================================
+! Uplink to CPE Router (Trunk)
+! ============================================
+
+interface GigabitEthernet0/24
+ description Uplink-to-CPE-Router
+ switchport mode trunk
+ switchport trunk allowed vlan 10,20,30,99
+ switchport trunk native vlan 99
+ spanning-tree portfast trunk
+!
+
+! ============================================
+! VLAN 10: FSE Network (Workstation Mediche)
+! ============================================
+
+! Workstation Medico #1
+interface GigabitEthernet0/1
+ description Workstation-Medico-1
+ switchport mode access
+ switchport access vlan 10
+ switchport port-security maximum 1
+ switchport port-security
+ switchport port-security violation restrict
+ spanning-tree portfast
+!
+
+! Workstation Medico #2
+interface GigabitEthernet0/2
+ description Workstation-Medico-2
+ switchport mode access
+ switchport access vlan 10
+ switchport port-security maximum 1
+ switchport port-security
+ spanning-tree portfast
+!
+
+! Workstation Medico #3
+interface GigabitEthernet0/3
+ description Workstation-Medico-3
+ switchport mode access
+ switchport access vlan 10
+ switchport port-security maximum 1
+ switchport port-security
+ spanning-tree portfast
+!
+
+! Ecografo Connesso
+interface GigabitEthernet0/4
+ description Ecografo-Diagnostico
+ switchport mode access
+ switchport access vlan 10
+ spanning-tree portfast
+!
+
+! ECG Digitale
+interface GigabitEthernet0/5
+ description ECG-Digitale
+ switchport mode access
+ switchport access vlan 10
+ spanning-tree portfast
+!
+
+! ============================================
+! VLAN 20: Admin Network
+! ============================================
+
+! Server File Locale
+interface GigabitEthernet0/10
+ description Server-File-Locale
+ switchport mode access
+ switchport access vlan 20
+ spanning-tree portfast
+!
+
+! Server Backup
+interface GigabitEthernet0/11
+ description Server-Backup
+ switchport mode access
+ switchport access vlan 20
+ spanning-tree portfast
+!
+
+! Stampante di Rete
+interface GigabitEthernet0/12
+ description Stampante-Rete
+ switchport mode access
+ switchport access vlan 20
+ spanning-tree portfast
+!
+
+! NAS Storage
+interface GigabitEthernet0/13
+ description NAS-Storage
+ switchport mode access
+ switchport access vlan 20
+ spanning-tree portfast
+!
+
+! ============================================
+! VLAN 30: Guest Network (WiFi)
+! ============================================
+
+! Access Point WiFi
+interface GigabitEthernet0/20
+ description Access-Point-Guest-WiFi
+ switchport mode access
+ switchport access vlan 30
+ spanning-tree portfast
+!
+
+! ============================================
+! Porte Non Utilizzate (Disabilitate)
+! ============================================
+
+interface range GigabitEthernet0/6-9, GigabitEthernet0/14-19, GigabitEthernet0/21-23
+ description Porta-Non-Utilizzata
+ switchport mode access
+ switchport access vlan 999
+ shutdown
+!
+
+! ============================================
+! Security Features
+! ============================================
+
+! Port Security Global
+!
+! Storm Control (Broadcast, Multicast, Unicast)
+interface range GigabitEthernet0/1-23
+ storm-control broadcast level 10.00
+ storm-control multicast level 10.00
+!
+
+! BPDU Guard (su porte access)
+spanning-tree portfast bpduguard default
+!
+
+! ============================================
+! SNMP Configuration
+! ============================================
+
+snmp-server community RegioneSNMP RO
+snmp-server location "Clinica San Marco - Switch LAN"
+snmp-server contact "admin@clinicasanmarco.it"
+snmp-server host 10.1.0.202 version 2c RegioneSNMP
+!
+
+! ============================================
+! Logging
+! ============================================
+
+logging buffered 51200
+logging host 10.1.0.201
+logging trap informational
+!
+
+! ============================================
+! NTP
+! ============================================
+
+ntp server 10.1.0.1
+clock timezone CET 1 0
+!
+
+! ============================================
+! SSH Access
+! ============================================
+
+! Generate RSA keys
+crypto key generate rsa modulus 2048
+!
+ip ssh version 2
+!
+! VTY lines
+line vty 0 4
+ transport input ssh
+ login local
+ exec-timeout 15 0
+!
+! Local user
+username admin privilege 15 secret SwitchAdmin123!
+!
+
+! ============================================
+! Banner
+! ============================================
+
+banner login ^C
+*****************************************************
+* Switch LAN - Clinica San Marco                    *
+* Accesso Riservato - Attività Monitorate          *
+*****************************************************
+^C
+!
+
+! ============================================
+! Spanning Tree
+! ============================================
+
+spanning-tree mode rapid-pvst
+spanning-tree extend system-id
+!
+! Priority per VLAN (questo switch è root per tutte le VLAN)
+spanning-tree vlan 10 priority 4096
+spanning-tree vlan 20 priority 4096
+spanning-tree vlan 30 priority 4096
+spanning-tree vlan 99 priority 4096
+!
+
+! ============================================
+! Inter-VLAN Routing Policy
+! ============================================
+! Nota: Il routing inter-VLAN è gestito dal CPE Router
+! Lo switch è Layer 2 only per semplicità
+
+! ============================================
+! QoS (Opzionale)
+! ============================================
+
+! Abilita QoS
+mls qos
+!
+! Trust DSCP su porte verso CPE
+interface GigabitEthernet0/24
+ mls qos trust dscp
+!
+
+! ============================================
+! Save Configuration
+! ============================================
+
+end
+write memory
+
+! ============================================
+! COMANDI VERIFICA POST-CONFIGURAZIONE
+! ============================================
+
+! show vlan brief
+! show interfaces status
+! show interfaces trunk
+! show spanning-tree
+! show port-security
+! show mac address-table
+! show logging
+! show running-config
+
+! ============================================
+! FINE CONFIGURAZIONE
+! ============================================

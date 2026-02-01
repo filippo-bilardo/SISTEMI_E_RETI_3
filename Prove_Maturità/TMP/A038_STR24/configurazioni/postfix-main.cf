@@ -1,0 +1,38 @@
+# Configurazione Postfix - SMTP Server
+# File: /etc/postfix/main.cf
+# Riferimento Prova: Configurazione Mail Server in DMZ
+
+# Hostname
+myhostname = mail.azienda.local
+mydomain = azienda.local
+myorigin = $mydomain
+
+# Network
+inet_interfaces = all
+inet_protocols = ipv4
+mynetworks = 127.0.0.0/8, 172.16.0.0/16
+
+# Mail delivery
+mydestination = $myhostname, localhost.$mydomain, localhost, $mydomain
+home_mailbox = Maildir/
+
+# SMTP Authentication
+smtpd_sasl_type = dovecot
+smtpd_sasl_path = private/auth
+smtpd_sasl_auth_enable = yes
+smtpd_sasl_security_options = noanonymous
+
+# TLS
+smtpd_tls_cert_file = /etc/ssl/certs/mail.crt
+smtpd_tls_key_file = /etc/ssl/private/mail.key
+smtpd_use_tls = yes
+smtpd_tls_security_level = may
+
+# Restrictions
+smtpd_recipient_restrictions = 
+    permit_mynetworks,
+    permit_sasl_authenticated,
+    reject_unauth_destination
+
+# Message size
+message_size_limit = 20971520

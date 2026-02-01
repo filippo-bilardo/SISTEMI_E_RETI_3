@@ -1,0 +1,133 @@
+# ========================================
+# CONFIGURAZIONE BIND9 DNS SERVER
+# Prova A038_ORD24
+# File: /etc/bind/named.conf.local
+# Server: 10.50.20.10
+# Data: 30 Gennaio 2026
+# ========================================
+
+# ========================================
+# ZONA FORWARD - azienda.local
+# Risolve nomi di dominio in indirizzi IP
+# ========================================
+
+zone "azienda.local" {
+    type master;
+    file "/etc/bind/zones/db.azienda.local";
+    allow-update { none; };
+    allow-transfer { 10.50.20.0/24; };  # Permetti trasferimento zona a secondario
+    notify yes;
+};
+
+# ========================================
+# ZONA REVERSE - 10.50.10.0/24 (LAN1)
+# Risolve IP in nomi di dominio
+# ========================================
+
+zone "10.50.10.in-addr.arpa" {
+    type master;
+    file "/etc/bind/zones/db.10.50.10";
+    allow-update { none; };
+    allow-transfer { 10.50.20.0/24; };
+    notify yes;
+};
+
+# ========================================
+# ZONA REVERSE - 10.50.20.0/24 (LAN2 Server)
+# ========================================
+
+zone "20.50.10.in-addr.arpa" {
+    type master;
+    file "/etc/bind/zones/db.10.50.20";
+    allow-update { none; };
+    allow-transfer { 10.50.20.0/24; };
+    notify yes;
+};
+
+# ========================================
+# ZONA REVERSE - 10.50.30.0/24 (LAN3 Admin)
+# ========================================
+
+zone "30.50.10.in-addr.arpa" {
+    type master;
+    file "/etc/bind/zones/db.10.50.30";
+    allow-update { none; };
+    allow-transfer { 10.50.20.0/24; };
+    notify yes;
+};
+
+# ========================================
+# ZONA REVERSE - 10.50.100.0/26 (DMZ)
+# ========================================
+
+zone "100.50.10.in-addr.arpa" {
+    type master;
+    file "/etc/bind/zones/db.10.50.100";
+    allow-update { none; };
+    allow-transfer { 10.50.20.0/24; };
+    notify yes;
+};
+
+# ========================================
+# ZONE SECONDARIE (OPZIONALE)
+# Se esiste un DNS secondario per ridondanza
+# ========================================
+
+# zone "azienda.local" {
+#     type slave;
+#     file "/var/cache/bind/db.azienda.local";
+#     masters { 10.50.20.10; };
+# };
+
+# ========================================
+# LOGGING
+# ========================================
+
+logging {
+    channel default_log {
+        file "/var/log/named/default.log" versions 3 size 5m;
+        severity info;
+        print-time yes;
+        print-severity yes;
+        print-category yes;
+    };
+    
+    channel query_log {
+        file "/var/log/named/query.log" versions 3 size 20m;
+        severity info;
+        print-time yes;
+    };
+    
+    channel security_log {
+        file "/var/log/named/security.log" versions 3 size 5m;
+        severity info;
+        print-time yes;
+    };
+    
+    category default { default_log; };
+    category queries { query_log; };
+    category security { security_log; };
+};
+
+# ========================================
+# NOTE CONFIGURAZIONE
+# ========================================
+
+# File principali BIND9:
+# - /etc/bind/named.conf          (file principale)
+# - /etc/bind/named.conf.options  (opzioni globali, forwarder, ACL)
+# - /etc/bind/named.conf.local    (questo file - zone locali)
+# - /etc/bind/named.conf.default-zones (zone di default)
+
+# Directory zone files:
+# /etc/bind/zones/
+
+# Comandi utili:
+# - named-checkconf               (verifica sintassi configurazione)
+# - named-checkzone               (verifica file zona)
+# - rndc reload                   (ricarica configurazione)
+# - rndc status                   (status server)
+# - dig @10.50.20.10 azienda.local (test query)
+# - nslookup web.azienda.local 10.50.20.10
+# - systemctl restart bind9
+# - tail -f /var/log/syslog | grep named

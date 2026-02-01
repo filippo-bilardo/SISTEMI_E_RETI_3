@@ -1,0 +1,13 @@
+# Configurazione DNS Server - BIND9
+# File: /etc/bind/named.conf.local
+# Riferimento Prova: Configurazione servizio DNS
+
+zone "azienda.local" {
+    type master;
+    file "/etc/bind/db.azienda.local";
+};
+
+zone "16.172.in-addr.arpa" {
+    type master;
+    file "/etc/bind/db.172.16";
+};

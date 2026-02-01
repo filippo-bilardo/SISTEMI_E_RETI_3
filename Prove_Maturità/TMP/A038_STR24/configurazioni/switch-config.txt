@@ -1,0 +1,346 @@
+! =========================================
+! CONFIGURAZIONE SWITCH CORE - A038_STR24
+! =========================================
+! Data: 30 Gennaio 2026
+! Device: Cisco Catalyst Switch
+! Funzione: Switch Core Layer 3
+! =========================================
+
+! --- CONFIGURAZIONE BASE ---
+enable
+configure terminal
+
+! Hostname
+hostname Switch-Core
+
+! --- VLAN CONFIGURATION ---
+
+! Creazione VLAN
+vlan 10
+ name LAN1-Utenti
+!
+vlan 20
+ name LAN2-Server
+!
+vlan 30
+ name LAN3-Admin
+!
+vlan 40
+ name DMZ
+!
+vlan 50
+ name Management
+!
+vlan 99
+ name Native-VLAN
+!
+
+! --- INTERFACCIA DI MANAGEMENT ---
+
+! SVI per Management
+interface vlan 50
+ description ** Management Interface **
+ ip address 172.16.30.2 255.255.255.240
+ no shutdown
+!
+
+! Default gateway
+ip default-gateway 172.16.30.1
+
+! Routing (se switch L3)
+ip routing
+!
+
+! Route statiche (se necessario)
+ip route 0.0.0.0 0.0.0.0 172.16.30.1
+
+! --- PORTE DI ACCESSO ---
+
+! VLAN 10 - Utenti (Porte 1-10)
+interface range FastEthernet0/1-10
+ description ** LAN1 - Postazioni Utenti **
+ switchport mode access
+ switchport access vlan 10
+ switchport port-security
+ switchport port-security maximum 2
+ switchport port-security violation restrict
+ switchport port-security mac-address sticky
+ spanning-tree portfast
+ spanning-tree bpduguard enable
+ no shutdown
+!
+
+! VLAN 20 - Server (Porte 11-20)
+interface range FastEthernet0/11-20
+ description ** LAN2 - Server Farm **
+ switchport mode access
+ switchport access vlan 20
+ spanning-tree portfast
+ no shutdown
+!
+
+! VLAN 30 - Admin (Porte 21-24)
+interface range FastEthernet0/21-24
+ description ** LAN3 - Amministrazione IT **
+ switchport mode access
+ switchport access vlan 30
+ spanning-tree portfast
+ no shutdown
+!
+
+! DMZ (Porte 25-26)
+interface range FastEthernet0/25-26
+ description ** DMZ - Server Pubblici **
+ switchport mode access
+ switchport access vlan 40
+ spanning-tree portfast
+ no shutdown
+!
+
+! --- PORTE TRUNK ---
+
+! Trunk verso Router/Firewall
+interface GigabitEthernet0/1
+ description ** Uplink to Router/Firewall **
+ switchport trunk encapsulation dot1q
+ switchport mode trunk
+ switchport trunk native vlan 99
+ switchport trunk allowed vlan 10,20,30,40,50
+ no shutdown
+!
+
+! Trunk verso Switch secondari
+interface GigabitEthernet0/2
+ description ** Trunk to Switch-LAN1 **
+ switchport trunk encapsulation dot1q
+ switchport mode trunk
+ switchport trunk native vlan 99
+ switchport trunk allowed vlan 10,50
+ no shutdown
+!
+
+! --- SPANNING TREE ---
+
+! Modalità Rapid PVST+
+spanning-tree mode rapid-pvst
+
+! Questo switch è root per tutte le VLAN
+spanning-tree vlan 10,20,30,40,50 priority 4096
+
+! PortFast default per porte di accesso
+spanning-tree portfast default
+
+! BPDU Guard globale
+spanning-tree portfast bpduguard default
+
+! --- PORT SECURITY ---
+
+! Esempio configurazione dettagliata porta sicura
+interface FastEthernet0/1
+ switchport port-security
+ switchport port-security maximum 2
+ switchport port-security violation restrict
+ switchport port-security aging time 2
+ switchport port-security aging type inactivity
+ switchport port-security mac-address sticky
+!
+
+! --- INTER-VLAN ROUTING (se Switch L3) ---
+
+interface vlan 10
+ description ** Gateway LAN1-Utenti **
+ ip address 172.16.1.1 255.255.255.0
+ no shutdown
+!
+
+interface vlan 20
+ description ** Gateway LAN2-Server **
+ ip address 172.16.2.1 255.255.255.0
+ no shutdown
+!
+
+interface vlan 30
+ description ** Gateway LAN3-Admin **
+ ip address 172.16.3.1 255.255.255.0
+ no shutdown
+!
+
+interface vlan 40
+ description ** Gateway DMZ **
+ ip address 172.16.10.1 255.255.255.192
+ no shutdown
+!
+
+! --- DHCP SNOOPING ---
+
+! Abilitazione DHCP Snooping
+ip dhcp snooping
+ip dhcp snooping vlan 10,30
+
+! Porte trusted (dove si trova il DHCP server)
+interface FastEthernet0/12
+ description ** DHCP Server **
+ ip dhcp snooping trust
+!
+
+interface GigabitEthernet0/1
+ description ** Uplink Trusted **
+ ip dhcp snooping trust
+!
+
+! Rate limit su porte untrusted
+interface range FastEthernet0/1-10
+ ip dhcp snooping limit rate 10
+!
+
+! --- DYNAMIC ARP INSPECTION ---
+
+ip arp inspection vlan 10,30
+
+interface FastEthernet0/12
+ ip arp inspection trust
+!
+
+interface GigabitEthernet0/1
+ ip arp inspection trust
+!
+
+! --- IP SOURCE GUARD ---
+
+interface range FastEthernet0/1-10
+ ip verify source
+!
+
+! --- SICUREZZA ---
+
+! Password encryption
+service password-encryption
+
+! Enable secret
+enable secret 5 $1$mERr$hx5rVt7rPNoS4wqbXKX7m0
+
+! Banner
+banner motd ^C
+*******************************************************
+*  SWITCH CORE - Accesso Riservato                   *
+*  Azienda S.r.l. - Tutti i diritti riservati        *
+*******************************************************
+^C
+
+! --- ACCESS CONFIGURATION ---
+
+! Console
+line console 0
+ password 7 104D000A0618
+ login
+ logging synchronous
+ exec-timeout 15 0
+!
+
+! VTY (SSH only)
+line vty 0 15
+ password 7 070C285F4D06
+ login local
+ transport input ssh
+ exec-timeout 15 0
+!
+
+! --- SSH ---
+ip domain-name azienda.local
+crypto key generate rsa general-keys modulus 2048
+ip ssh version 2
+ip ssh time-out 60
+ip ssh authentication-retries 3
+
+! Utenti locali
+username admin privilege 15 secret 5 $1$mERr$hx5rVt7rPNoS4wqbXKX7m0
+username operator privilege 7 secret 5 $1$lKjH$8fh3kd9Hf7dKs8dHf7dKs0
+
+! --- ACL per Management ---
+
+ip access-list standard MGMT_ACCESS
+ permit 172.16.30.0 0.0.0.15
+ permit 172.16.3.0 0.0.0.255
+ deny any log
+!
+
+line vty 0 15
+ access-class MGMT_ACCESS in
+!
+
+! --- SNMP ---
+snmp-server community public RO
+snmp-server community private RW
+snmp-server location "Server Room - Piano 1"
+snmp-server contact "IT Dept - admin@azienda.local"
+
+! --- LOGGING ---
+logging buffered 51200
+logging console warnings
+logging trap informational
+logging host 172.16.2.100
+
+! --- NTP ---
+ntp server 172.16.2.10
+clock timezone CET 1
+
+! --- ETHERCHANNEL (esempio per ridondanza) ---
+
+! Port-channel verso switch secondario
+interface range FastEthernet0/47-48
+ description ** EtherChannel to Switch-LAN2 **
+ channel-group 1 mode active
+ no shutdown
+!
+
+interface Port-channel1
+ description ** EtherChannel Bundle **
+ switchport trunk encapsulation dot1q
+ switchport mode trunk
+ switchport trunk allowed vlan 10,20,30,50
+!
+
+! --- QOS ---
+
+! Configurazione CoS to DSCP mapping
+mls qos
+
+! Trust CoS su porte VoIP
+interface range FastEthernet0/1-10
+ mls qos trust cos
+ auto qos voip cisco-phone
+!
+
+! --- STORM CONTROL ---
+
+! Protezione contro broadcast/multicast storms
+interface range FastEthernet0/1-10
+ storm-control broadcast level 10.00
+ storm-control multicast level 10.00
+ storm-control action shutdown
+!
+
+! --- MAC ADDRESS TABLE ---
+
+! Aging time (default 300 secondi)
+mac address-table aging-time 300
+
+! --- SALVATAGGIO ---
+end
+write memory
+
+! --- COMANDI DI VERIFICA ---
+! show vlan brief
+! show interfaces status
+! show interfaces trunk
+! show spanning-tree
+! show port-security
+! show ip dhcp snooping
+! show ip arp inspection
+! show running-config
+! show mac address-table
+! show etherchannel summary
+
+! =========================================
+! FINE CONFIGURAZIONE
+! =========================================

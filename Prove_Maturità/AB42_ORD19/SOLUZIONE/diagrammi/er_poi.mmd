@@ -1,0 +1,88 @@
+%% ER diagram (Mermaid) - modello concettuale base
+erDiagram
+  INFOPOINT ||--o{ RENTAL : gestisce
+  VISITOR ||--o{ TICKET : acquista
+  TICKET ||--|| TARIFF : ha
+  TICKET ||--o{ ACCESS_LOG : genera
+  DEVICE ||--o{ ACCESS_LOG : usa
+  INFOPOINT ||--o{ DEVICE : consegna
+
+  POI ||--o{ MEDIA : contiene
+  POI ||--o{ FEEDBACK : riceve
+  TICKET ||--o{ FEEDBACK : lascia
+
+  TICKET ||--o{ TICKET_POI_ADV : abilita
+  POI ||--o{ TICKET_POI_ADV : incluso
+
+  POI {
+    int poi_id PK
+    string nome
+    string tipo
+    string indirizzo
+  }
+
+  MEDIA {
+    int media_id PK
+    int poi_id FK
+    string kind "video|image"
+    string url
+    string lang
+    string caption
+  }
+
+  TICKET {
+    int ticket_id PK
+    string password_hash
+    date valid_date
+    int tariff_id FK
+  }
+
+  TARIFF {
+    int tariff_id PK
+    string name "BASE|INTERMEDIA|PIENA"
+  }
+
+  DEVICE {
+    int device_id PK
+    string serial
+    string cert_fingerprint
+    string status
+  }
+
+  INFOPOINT {
+    int infopoint_id PK
+    string name
+    string location
+  }
+
+  RENTAL {
+    int rental_id PK
+    int ticket_id FK
+    int device_id FK
+    int infopoint_id FK
+    string collateral_type "ID|CC"
+    string collateral_ref
+  }
+
+  FEEDBACK {
+    int feedback_id PK
+    int poi_id FK
+    int ticket_id FK
+    int rating
+    string comment
+    datetime created_at
+  }
+
+  ACCESS_LOG {
+    int log_id PK
+    int ticket_id FK
+    int device_id FK
+    int poi_id FK
+    datetime ts
+    string action
+  }
+
+  TICKET_POI_ADV {
+    int ticket_id FK
+    int poi_id FK
+  }

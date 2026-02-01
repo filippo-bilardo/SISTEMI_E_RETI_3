@@ -1,0 +1,353 @@
+! ========================================
+! CONFIGURAZIONE SWITCH LAYER 3 CORE
+! Prova A038_ORD24 - Switch Core con Inter-VLAN Routing
+! Data: 30 Gennaio 2026
+! ========================================
+
+! Nome del dispositivo
+hostname SWITCH-CORE-L3
+
+! Encryption password
+service password-encryption
+security passwords min-length 8
+
+! Banner
+banner motd #
+*********************************************************
+* SWITCH CORE L3 - ACCESSO RISERVATO                   *
+* Prova A038_ORD24                                      *
+* Tutti gli accessi sono monitorati                     *
+*********************************************************
+#
+
+! Abilita routing IP
+ip routing
+
+! ========================================
+! CREAZIONE VLAN
+! ========================================
+
+vlan 10
+ name LAN1-Utenti-Uffici
+vlan 20
+ name LAN2-Server-Applicativi
+vlan 30
+ name LAN3-Amministrazione-IT
+vlan 100
+ name DMZ-Server-Pubblici
+vlan 200
+ name VPN-Remote-Access
+vlan 999
+ name VLAN-Blackhole
+
+! ========================================
+! CONFIGURAZIONE SVI (Switch Virtual Interfaces)
+! Per Inter-VLAN Routing
+! ========================================
+
+! VLAN 10 - Utenti Uffici (200 host)
+interface vlan 10
+ description Gateway LAN1 Utenti Uffici
+ ip address 10.50.10.1 255.255.255.0
+ ip helper-address 10.50.20.11
+ no shutdown
+
+! VLAN 20 - Server Applicativi (100 host)
+interface vlan 20
+ description Gateway LAN2 Server
+ ip address 10.50.20.1 255.255.255.0
+ no shutdown
+
+! VLAN 30 - Amministrazione IT (50 host)
+interface vlan 30
+ description Gateway LAN3 Amministrazione
+ ip address 10.50.30.1 255.255.255.0
+ ip helper-address 10.50.20.11
+ no shutdown
+
+! VLAN 100 - DMZ (60 host disponibili)
+interface vlan 100
+ description Gateway DMZ Server Pubblici
+ ip address 10.50.100.1 255.255.255.192
+ no shutdown
+
+! VLAN 200 - VPN Remote (60 host)
+interface vlan 200
+ description Gateway VPN Remote Access
+ ip address 10.50.200.1 255.255.255.192
+ no shutdown
+
+! ========================================
+! CONFIGURAZIONE INTERFACCE TRUNK
+! ========================================
+
+! Trunk verso Router
+interface GigabitEthernet1/0/1
+ description Trunk verso Router Gateway
+ switchport trunk encapsulation dot1q
+ switchport mode trunk
+ switchport trunk allowed vlan 10,20,30,100,200
+ switchport trunk native vlan 999
+ no shutdown
+
+! Trunk verso Switch Access LAN1
+interface GigabitEthernet1/0/2
+ description Trunk verso Switch Access LAN1
+ switchport trunk encapsulation dot1q
+ switchport mode trunk
+ switchport trunk allowed vlan 10
+ switchport trunk native vlan 999
+ spanning-tree portfast trunk
+ no shutdown
+
+! Trunk verso Switch Access LAN3
+interface GigabitEthernet1/0/3
+ description Trunk verso Switch Access LAN3
+ switchport trunk encapsulation dot1q
+ switchport mode trunk
+ switchport trunk allowed vlan 30
+ switchport trunk native vlan 999
+ spanning-tree portfast trunk
+ no shutdown
+
+! Trunk verso Switch DMZ
+interface GigabitEthernet1/0/4
+ description Trunk verso Switch DMZ
+ switchport trunk encapsulation dot1q
+ switchport mode trunk
+ switchport trunk allowed vlan 100
+ switchport trunk native vlan 999
+ no shutdown
+
+! ========================================
+! PORTE ACCESS PER SERVER LAN2
+! ========================================
+
+! DNS Server
+interface GigabitEthernet1/0/10
+ description DNS Server
+ switchport mode access
+ switchport access vlan 20
+ switchport port-security
+ switchport port-security maximum 1
+ switchport port-security mac-address sticky
+ switchport port-security violation restrict
+ spanning-tree portfast
+ no shutdown
+
+! DHCP Server
+interface GigabitEthernet1/0/11
+ description DHCP Server
+ switchport mode access
+ switchport access vlan 20
+ switchport port-security
+ switchport port-security maximum 1
+ switchport port-security mac-address sticky
+ switchport port-security violation restrict
+ spanning-tree portfast
+ no shutdown
+
+! File Server
+interface GigabitEthernet1/0/12
+ description File Server
+ switchport mode access
+ switchport access vlan 20
+ switchport port-security
+ switchport port-security maximum 1
+ switchport port-security mac-address sticky
+ switchport port-security violation restrict
+ spanning-tree portfast
+ no shutdown
+
+! Database Server
+interface GigabitEthernet1/0/13
+ description Database Server
+ switchport mode access
+ switchport access vlan 20
+ switchport port-security
+ switchport port-security maximum 1
+ switchport port-security mac-address sticky
+ switchport port-security violation restrict
+ spanning-tree portfast
+ no shutdown
+
+! VPN Server
+interface GigabitEthernet1/0/15
+ description VPN Server
+ switchport mode access
+ switchport access vlan 20
+ switchport port-security
+ switchport port-security maximum 1
+ switchport port-security mac-address sticky
+ spanning-tree portfast
+ no shutdown
+
+! ========================================
+! SICUREZZA LAYER 2
+! ========================================
+
+! DHCP Snooping
+ip dhcp snooping
+ip dhcp snooping vlan 10,30
+no ip dhcp snooping information option
+interface GigabitEthernet1/0/11
+ ip dhcp snooping trust
+
+! Dynamic ARP Inspection
+ip arp inspection vlan 10,20,30,100
+interface GigabitEthernet1/0/1
+ ip arp inspection trust
+interface GigabitEthernet1/0/11
+ ip arp inspection trust
+
+! IP Source Guard
+interface range GigabitEthernet1/0/5-24
+ ip verify source
+
+! Storm Control (broadcast, multicast, unicast)
+interface range GigabitEthernet1/0/2-48
+ storm-control broadcast level 50.00
+ storm-control multicast level 50.00
+ storm-control action shutdown
+
+! ========================================
+! SPANNING TREE PROTOCOL
+! ========================================
+
+! Rapid PVST+
+spanning-tree mode rapid-pvst
+spanning-tree extend system-id
+
+! Imposta come Root Bridge per tutte le VLAN
+spanning-tree vlan 10,20,30,100,200 priority 4096
+
+! BPDU Guard su porte access
+interface range GigabitEthernet1/0/5-48
+ spanning-tree portfast
+ spanning-tree bpduguard enable
+
+! Root Guard su porte trunk
+interface range GigabitEthernet1/0/1-4
+ spanning-tree guard root
+
+! ========================================
+! CONFIGURAZIONE SSH
+! ========================================
+
+! Genera chiavi RSA
+crypto key generate rsa modulus 2048
+
+! Configurazione SSH
+ip ssh version 2
+ip ssh time-out 60
+ip ssh authentication-retries 3
+
+! Management Interface
+interface vlan 1
+ description Management Interface
+ ip address 10.50.1.2 255.255.255.0
+ no shutdown
+
+! ACL per accesso management
+ip access-list standard ADMIN_SSH
+ permit 10.50.30.0 0.0.0.255
+ deny any log
+
+! Linee VTY
+line vty 0 15
+ transport input ssh
+ login local
+ access-class ADMIN_SSH in
+ exec-timeout 10 0
+ logging synchronous
+
+! Console
+line console 0
+ password 7 0822455D0A16
+ login
+ exec-timeout 5 0
+ logging synchronous
+
+! ========================================
+! UTENTI LOCALI
+! ========================================
+
+username admin privilege 15 secret 5 $1$mERr$hx5rVt7rPNoS4wqbXKX7m0
+username netadmin privilege 15 secret 5 $1$ABCD$xyz1234567890abcdefghij
+
+! ========================================
+! ROUTING
+! ========================================
+
+! Route di default verso Router Gateway
+ip route 0.0.0.0 0.0.0.0 10.50.0.1
+
+! ========================================
+! LOGGING E MONITORING
+! ========================================
+
+! Syslog server
+logging 10.50.20.12
+logging trap informational
+logging source-interface vlan 1
+
+! Local logging
+logging buffered 51200 informational
+
+! Timestamp
+service timestamps log datetime msec
+service timestamps debug datetime msec
+
+! ========================================
+! SNMP
+! ========================================
+
+snmp-server community public RO
+snmp-server community private RW ADMIN_SSH
+snmp-server location "Sede Principale - Core Switch"
+snmp-server contact "IT Admin - admin@azienda.local"
+snmp-server enable traps snmp linkdown linkup
+snmp-server enable traps vlan-membership
+snmp-server host 10.50.20.12 version 2c public
+
+! ========================================
+! NTP
+! ========================================
+
+ntp server 10.50.0.1
+clock timezone CET 1
+clock summer-time CEST recurring
+
+! ========================================
+! INTERFACCE NON UTILIZZATE
+! ========================================
+
+interface range GigabitEthernet1/0/25-48
+ description Porte Non Utilizzate
+ switchport mode access
+ switchport access vlan 999
+ shutdown
+
+! ========================================
+! SALVATAGGIO
+! ========================================
+
+! Salvare con: copy running-config startup-config
+
+! ========================================
+! COMANDI DI VERIFICA
+! ========================================
+
+! show vlan brief
+! show interfaces status
+! show interfaces trunk
+! show spanning-tree summary
+! show port-security
+! show ip interface brief
+! show ip route
+! show ip dhcp snooping
+! show ip arp inspection
+! show mac address-table
+! show running-config
+
+end
