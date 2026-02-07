@@ -145,6 +145,7 @@
 - 16.6 Lab 6: WireGuard con Docker e client Windows
 - 16.7 Lab 7: Headscale - VPN mesh self-hosted
 - 16.8 Lab 8: Linux gateway con WireGuard e Tailscale
+- 16.9 Lab 9: VPN IPsec con Router Cisco in Packet Tracer
 
 ### 17. Risorse e Riferimenti
 - 17.1 RFC e standard
