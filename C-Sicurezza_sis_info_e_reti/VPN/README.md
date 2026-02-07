@@ -87,55 +87,95 @@
 - 9.5 VPN per IoT
 - 9.6 VPN per streaming e P2P
 
-### 10. VPN e Networking
-- 10.1 VPN e NAT
-- 10.2 VPN e firewall
-- 10.3 VPN e routing
-- 10.4 VPN e VLAN
-- 10.5 Integrazione con Active Directory
+### 10. [Tailscale e VPN Mesh di Nuova Generazione](10.Tailscale_e_VPN_Mesh_di_Nuova_Generazione.md)
+- 10.1 Introduzione alle VPN Mesh
+- 10.2 Tailscale
+- 10.3 Headscale
+- 10.4 ZeroTier
+- 10.5 Nebula (by Slack)
+- 10.6 NetBird
+- 10.7 Altre Soluzioni Emergenti
+- 10.8 Confronto tra Soluzioni Mesh
+- 10.9 Casi d'Uso Specifici
+- 10.10 Vantaggi e Limitazioni
 
-### 11. VPN Cloud e Servizi Commerciali
-- 11.1 AWS VPN
-- 11.2 Azure VPN Gateway
-- 11.3 Google Cloud VPN
-- 11.4 Servizi VPN commerciali
+### 11. VPN e Networking
+- 11.1 VPN e NAT
+- 11.2 VPN e firewall
+- 11.3 VPN e routing
+- 11.4 VPN e VLAN
+- 11.5 Integrazione con Active Directory
+
+### 12. VPN Cloud e Servizi Commerciali
+- 12.1 AWS VPN
+- 12.2 Azure VPN Gateway
+- 12.3 Google Cloud VPN
+- 12.4 Servizi VPN commerciali
   - Valutazione e scelta
   - Privacy e logging policies
-- 11.5 VPN aziendali vs consumer
+- 12.5 VPN aziendali vs consumer
 
-### 12. Troubleshooting e Diagnostica
-- 12.1 Problemi comuni e soluzioni
-- 12.2 Strumenti di diagnostica
+### 13. Troubleshooting e Diagnostica
+- 13.1 Problemi comuni e soluzioni
+- 13.2 Strumenti di diagnostica
   - tcpdump, Wireshark
   - Log analysis
-- 12.3 Test di connettività
-- 12.4 Debug dei protocolli VPN
+- 13.3 Test di connettività
+- 13.4 Debug dei protocolli VPN
 
-### 13. Aspetti Legali e Privacy
-- 13.1 Normative sulla privacy (GDPR)
-- 13.2 Logging e data retention
-- 13.3 Giurisdizione e ubicazione server
-- 13.4 VPN e attività illegali
+### 14. Aspetti Legali e Privacy
+- 14.1 Normative sulla privacy (GDPR)
+- 14.2 Logging e data retention
+- 14.3 Giurisdizione e ubicazione server
+- 14.4 VPN e attività illegali
 
-### 14. Futuro delle VPN
-- 14.1 Zero Trust Network Access (ZTNA)
-- 14.2 SD-WAN e VPN
-- 14.3 VPN e 5G
-- 14.4 Tendenze emergenti
+### 15. Futuro delle VPN
+- 15.1 Zero Trust Network Access (ZTNA)
+- 15.2 SD-WAN e VPN
+- 15.3 VPN e 5G
+- 15.4 Tendenze emergenti
+- 15.5 VPN Mesh e overlay networks
 
-### 15. Laboratori ed Esercitazioni
-- 15.1 Lab 1: Configurare una VPN Site-to-Site con IPsec
-- 15.2 Lab 2: Installare e configurare OpenVPN
-- 15.3 Lab 3: Configurare WireGuard
-- 15.4 Lab 4: Analizzare il traffico VPN con Wireshark
-- 15.5 Lab 5: Configurare VPN remote access
+### 16. Laboratori ed Esercitazioni
+- 16.1 Lab 1: Configurare una VPN Site-to-Site con IPsec
+- 16.2 Lab 2: Installare e configurare OpenVPN
+- 16.3 Lab 3: Configurare WireGuard
+- 16.4 Lab 4: Analizzare il traffico VPN con Wireshark
+- 16.5 Lab 5: Configurare VPN remote access
+- 16.6 Lab 6: WireGuard con Docker e client Windows
+- 16.7 Lab 7: Headscale - VPN mesh self-hosted
+- 16.8 Lab 8: Linux gateway con WireGuard e Tailscale
 
-### 16. Risorse e Riferimenti
-- 16.1 RFC e standard
-- 16.2 Documentazione ufficiale
-- 16.3 Tool e software
-- 16.4 Libri e articoli consigliati
-- 16.5 Community e forum
+### 17. Risorse e Riferimenti
+- 17.1 RFC e standard
+- 17.2 Documentazione ufficiale
+  - OpenVPN, WireGuard, strongSwan
+  - Tailscale, Headscale, ZeroTier
+- 17.3 Tool e software
+- 17.4 Libri e articoli consigliati
+- 17.5 Community e forum
+- 17.6 Repository GitHub rilevanti
+
+### 18. Servizi VPN Commerciali - Approfondimento
+- 18.1 Come Funzionano le VPN Commerciali
+- 18.2 Vantaggi dei Servizi VPN Commerciali
+- 18.3 Svantaggi e Limitazioni
+- 18.4 Provider VPN: Analisi Dettagliata
+  - Top Tier: Mullvad, ProtonVPN, IVPN
+  - Mainstream: NordVPN, ExpressVPN, Surfshark
+  - Provider da evitare
+- 18.5 Confronto: VPN Commerciale vs Self-Hosted
+- 18.6 Aspetti Tecnici Avanzati
+  - Kill Switch, Split Tunneling, DNS Leak, WebRTC Leak
+- 18.7 Considerazioni sulla Privacy e Giurisdizione
+  - Five/Nine/Fourteen Eyes
+  - No-Log Policy e audit
+- 18.8 Funzionalità Avanzate dei Provider
+  - Multi-Hop, Offuscamento, Onion over VPN
+- 18.9 Guida Pratica: Configurazione e Test
+- 18.10 Scenari di Utilizzo Reali
+- 18.11 FAQ e Miti sulle VPN Commerciali
+- 18.12 Esercizi e Verifiche
 
 ### Appendici
 - A. Glossario dei termini
