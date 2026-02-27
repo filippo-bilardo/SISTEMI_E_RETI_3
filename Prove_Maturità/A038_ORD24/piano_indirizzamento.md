@@ -7,6 +7,25 @@
 **Sottorete assegnata**: `10.100.0.0/16`
 
 ---
+In questo contesto di piano di indirizzamento IP, **"minimo di 8 indirizzi complessivi"** significa che ogni struttura sanitaria privata convenzionata deve avere a disposizione almeno 8 indirizzi IP utilizzabili.
+
+- **8 indirizzi = /29 in CIDR** (subnet mask 255.255.255.248)
+- Di questi 8 indirizzi:
+    - **1 indirizzo di rete** (il più basso, non utilizzabile per host)
+    - **6 indirizzi per host** (dispositivi effettivi come server, workstation, stampanti, ecc.)
+    - **1 indirizzo di broadcast** (il più alto, non utilizzabile per host)
+
+Ogni struttura sanitaria potrà utilizzare gli indirizzi intermedi per:
+- Server medicali
+- Computer per personale
+- Dispositivi medici (ecografi, ecc.)
+- Stampanti di reparto
+- Sistemi di backup
+- Dispositivi di amministrazione
+
+- 2000 strutture sanitarie × 8 indirizzi = **16.000 indirizzi IP totali**
+- Questo richiederebbe uno spazio di indirizzamento di almeno **/13** (8.192 host) o preferibilmente **/12** per margini di crescita
+---
 
 ## Analisi dei Requisiti
 
