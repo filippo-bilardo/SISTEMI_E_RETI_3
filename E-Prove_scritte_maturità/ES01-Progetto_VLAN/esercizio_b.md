@@ -38,12 +38,6 @@ Implementa Router-on-a-Stick con 4 subinterface.
 ### STEP 6: Test Connettività (30 min)
 Esegui test ping, traceroute e compila tabella verifiche.
 
-### STEP 7: Domande Teoriche (30 min)
-**📖 Consulta il file `Domande_Teoria.md` per le 20 domande complete**
-- 6 sezioni tematiche
-- VLAN, Subnetting, Router-on-a-Stick, 802.1Q, Troubleshooting
-- 70 punti totali
-
 ---
 
 ## 📦 Consegna Finale
@@ -55,7 +49,6 @@ Esegui test ping, traceroute e compila tabella verifiche.
 4. Config_Switch-Amm.txt
 5. Config_Switch-Dev.txt
 6. Test_Connettivita.pdf
-7. **Risposte_Teoria.pdf** (20 domande da Domande_Teoria.md)
 
 **Nome:** `Cognome_Nome_VLAN_TechCorp.zip`  
 **Scadenza:** _______________

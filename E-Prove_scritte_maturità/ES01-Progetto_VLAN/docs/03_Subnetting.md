@@ -1,4 +1,4 @@
-# Subnetting - Suddivisione delle Reti
+# Subnetting
 
 ## Introduzione
 
