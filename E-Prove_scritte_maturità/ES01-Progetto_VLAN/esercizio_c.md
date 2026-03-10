@@ -1,4 +1,4 @@
-# 📖 STEP 7: Domande Teoriche
+# 📖 Domande Teoriche
 
 **Tempo:** 30 minuti  
 **Punteggio:** Incluso nella valutazione documentazione
@@ -13,7 +13,6 @@ Rispondi alle seguenti domande in modo completo e preciso. Le risposte devono di
 - Scrivi in modo chiaro e organizzato
 - Usa elenchi puntati quando appropriato
 - Supporta le risposte con esempi quando possibile
-- Lunghezza minima: 3-5 righe per domanda
 
 ---
 
@@ -505,11 +504,9 @@ _________________________________________________________________
 
 ---
 
-## Consegna STEP 7
+## Consegna
 
-**Formato:** Documento PDF o Word
-
-**Nome file:** `Cognome_Nome_Risposte_Teoria.pdf`
+**Formato:** Documento Google
 
 **Contenuto:**
 - Tutte le 20 domande con risposte complete
