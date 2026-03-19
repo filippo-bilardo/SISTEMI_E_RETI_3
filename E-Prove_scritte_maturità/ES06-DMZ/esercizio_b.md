@@ -1,4 +1,4 @@
-# ES06-B — Progetto Autonomo: DMZ a Doppio Firewall per CorpSecure S.p.A.
+# B - Progetto Autonomo: DMZ a Doppio Firewall per CorpSecure S.p.A.
 
 🏗️ **Tipo**: Progetto autonomo  
 ⭐ **Difficoltà**: ⭐⭐⭐⭐ (Avanzato)  
@@ -33,11 +33,11 @@ L'architettura deve seguire questo schema generale:
            │
     ╔══════╪══════════════════════════════════╗
     ║      │         ZONA DMZ                 ║
-    ║  ┌───┴────┐  ┌──────────┐  ┌─────────┐ ║
-    ║  │Web Srv │  │Mail Srv  │  │DNS Srv  │ ║
-    ║  │Reverse │  │(SMTP/    │  │(Pubblico│ ║
-    ║  │Proxy   │  │ IMAP)    │  │ esterno)│ ║
-    ║  └────────┘  └──────────┘  └─────────┘ ║
+    ║  ┌───┴────┐  ┌──────────┐  ┌─────────┐  ║
+    ║  │Web Srv │  │Mail Srv  │  │DNS Srv  │  ║
+    ║  │Reverse │  │(SMTP/    │  │(Pubblico│  ║
+    ║  │Proxy   │  │ IMAP)    │  │ esterno)│  ║
+    ║  └────────┘  └──────────┘  └─────────┘  ║
     ╚══════╪══════════════════════════════════╝
            │
     ┌──────┴──────┐
@@ -46,8 +46,8 @@ L'architettura deve seguire questo schema generale:
     └──────┬──────┘
            │
     ┌──────┴──────────────────────────────────┐
-    │                                          │
-    ▼                                          ▼
+    │                                         │
+    ▼                                         ▼
 ┌──────────┐                          ┌──────────────┐
 │   LAN    │                          │  SERVER FARM │
 │  UFFICI  │                          │  INTERNA     │
@@ -145,7 +145,7 @@ Esempio di struttura (da adattare con i tuoi IP):
           │
     ┌─────┴─────┐
     │ Switch-DMZ│
-    └─┬──┬──┬──┘
+    └─┬──┬──┬───┘
       │  │  │
      Web Mail DNS
           │

@@ -1,4 +1,4 @@
-# ES06-A — Laboratorio Guidato: Configurazione DMZ con Singolo Firewall
+# A — Laboratorio Guidato: Configurazione DMZ con Singolo Firewall
 
 🔬 **Tipo**: Laboratorio guidato  
 ⭐ **Difficoltà**: ⭐⭐⭐ (Intermedio)  
@@ -39,9 +39,9 @@ L'infrastruttura sarà configurata su un **Router Cisco 2901** che funge da fire
                     INTERNET (simulata)
                     203.0.113.0/30
                          │
-                    ┌────┴────┐
+                    ┌────┴─────┐
                     │Router-ISP│  203.0.113.1
-                    └────┬────┘
+                    └────┬─────┘
                          │ (cavo incrociato)
                          │ 203.0.113.2 (Gi0/2)
                     ┌────┴──────────────────┐
@@ -49,14 +49,14 @@ L'infrastruttura sarà configurata su un **Router Cisco 2901** che funge da fire
                     │   (Router0 - 2901)    │
                     │ 192.168.100.1 (Gi0/1) │
                     │ 10.0.0.1     (Gi0/0)  │
-                    └──────┬──────────┬─────┘
-                           │          │
-                    ┌──────┴──┐  ┌────┴──────┐
+                    └──────┬───────────┬────┘
+                           │           │
+                    ┌──────┴───┐  ┌────┴──────┐
                     │Switch-DMZ│  │Switch-LAN │
-                    └──────┬──┘  └────┬──────┘
-                           │          │
-              ┌────────────┼────┐    ┌┼──────────────┐
-              │            │    │    ││              │
+                    └──────┬───┘  └────┬──────┘
+                           │           │
+              ┌────────────┼────┐    ┌─┼──────────────┐
+              │            │    │    │ │              │
          Web Server   DNS Server  Mail Server   PC1..PC4
          192.168.100.10 .11     .12   10.0.0.10..13
 ```
@@ -230,7 +230,7 @@ Firewall(config-if)# exit
 Firewall(config)# ip route 0.0.0.0 0.0.0.0 203.0.113.1
 
 Firewall(config)# end
-Firewall# write memory
+Firewall# copy running-config startup-config
 ```
 
 Verifica con:

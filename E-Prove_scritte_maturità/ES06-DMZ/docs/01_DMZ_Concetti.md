@@ -43,10 +43,10 @@ Con la DMZ, il web server viene spostato in una rete separata:
 ```
 INTERNET ──── Firewall ──── DMZ ──── Firewall ──── LAN INTERNA
 8.8.8.8        │            │         │             192.168.1.0/24
-               │       Web Server    │
-               │       192.168.100.x │
-               │                     │
-               └── regole ACL ───────┘
+               │       Web Server     │
+               │       192.168.100.x  │
+               │                      │
+               └── regole ACL ────────┘
 ```
 
 **Vantaggio**: Anche se il web server viene compromesso, l'attaccante si trova nella DMZ — una zona isolata con regole di firewall che **bloccano esplicitamente** qualsiasi connessione verso la LAN interna. Il danno è limitato alla sola DMZ.
@@ -226,10 +226,10 @@ La **defense in depth** (difesa in profondità) è una strategia di sicurezza mi
                         │
                ╔════════╪════════╗
                ║        │  DMZ   ║
-               ║   ┌────┴───┐   ║
-               ║   │Server  │   ║
-               ║   │ Pubblici│   ║
-               ║   └────┬───┘   ║
+               ║   ┌────┴───┐    ║
+               ║   │Server  │    ║
+               ║   │Pubblici│    ║
+               ║   └────┬───┘    ║
                ╚════════╪════════╝
                         │
                    ┌────┴────┐

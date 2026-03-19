@@ -261,10 +261,10 @@ La scelta tra `in` e `out` dipende dal punto di vista del router:
 
 ```
                        ┌─────────────┐
-Traffico                │             │   Traffico
+Traffico               │             │   Traffico
 da Internet  ──IN──►   │   ROUTER    │   ──OUT──► verso LAN
              (Gi0/2)   │             │   (Gi0/0)
-                        └─────────────┘
+                       └─────────────┘
                                │
                            ◄──IN── (Gi0/1)
                         traffico dalla DMZ

@@ -77,10 +77,10 @@ Un **IPS (Intrusion Prevention System)** è come un IDS, ma con la capacità di 
                 ┌──────────────────────────────────────────┐
    Traffico ───►│              IPS (inline)                │──► Traffico pulito
    in entrata   │  ┌─────────────────────────┐             │    (o bloccato)
-                │  │  Analisi traffico        │             │
-                │  │  ↓                       │             │
-                │  │  Match firma/anomalia?   │             │
-                │  │  ├─ No  → forward        │             │
+                │  │  Analisi traffico       │             │
+                │  │  ↓                      │             │
+                │  │  Match firma/anomalia?  │             │
+                │  │  ├─ No  → forward       │             │
                 │  │  └─ Sì  → DROP + ALERT  │             │
                 │  └─────────────────────────┘             │
                 └──────────────────────────────────────────┘
@@ -117,23 +117,23 @@ Il posizionamento è cruciale. Ecco le posizioni tipiche:
                     ┌────────┴────────┐
                     │                 │
                ┌────┴────┐      [IDS/IPS 1]
-               │Firewall  │       pre-firewall
-               │Esterno   │       (vede tutto, anche
+               │Firewall │       pre-firewall
+               │Esterno  │       (vede tutto, anche
                └────┬────┘        traffico bloccato)
                     │
                ┌────┴────┐
                │  [DMZ]  │◄─── [IDS/IPS 2] in DMZ
-               │         │      (vede traffico che ha
-               └────┬────┘       superato FW esterno)
+               │         │       (vede traffico che ha
+               └────┬────┘        superato FW esterno)
                     │
                ┌────┴────┐
-               │Firewall  │
-               │Interno   │
+               │Firewall │
+               │Interno  │
                └────┬────┘
                     │
                ┌────┴────┐
                │  [LAN]  │◄─── [IDS/IPS 3] nella LAN
-               └─────────┘      (rileva lateral movement)
+               └─────────┘       (rileva lateral movement)
 ```
 
 ### 3.1 IDS/IPS Esterno (Pre-Firewall)
